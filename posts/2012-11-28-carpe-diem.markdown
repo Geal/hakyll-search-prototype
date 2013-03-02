@@ -1,4 +1,5 @@
 ---
+test: <truc>
 title: Carpe Diem
 ---
 

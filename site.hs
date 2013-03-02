@@ -3,8 +3,10 @@
 import           Control.Applicative ((<$>))
 import           Data.Monoid         (mappend)
 import           Hakyll
-
-
+import           Debug.Trace
+import           Hakyll.Core.Compiler
+import           Data.List
+import           qualified Data.Map as M
 --------------------------------------------------------------------------------
 main :: IO ()
 main = hakyll $ do
@@ -28,6 +30,10 @@ main = hakyll $ do
             >>= loadAndApplyTemplate "templates/post.html"    postCtx
             >>= loadAndApplyTemplate "templates/default.html" postCtx
             >>= relativizeUrls
+
+    match "posts/*" $ version "raw" $ do 
+        route idRoute
+        compile  getResourceBody
 
     create ["archive.html"] $ do
         route idRoute
@@ -55,10 +61,47 @@ main = hakyll $ do
 
     match "templates/*" $ compile templateCompiler
 
+    create ["words.txt", "blah.txt"] $ do
+        route idRoute
+        compile $ do
+            --let myCtx = field "words" $ \_ -> wordList
+            let myCtx = field "words" $ \_ -> (getWords (loadAll ("posts/*" .&&. hasVersion "raw")))
+            makeItem "" >>= loadAndApplyTemplate "templates/words.txt" myCtx
+
+
+countWords :: [String] -> [(String, Int)]
+countWords words = map (\xs -> (head xs, length xs)) . group . sort $ words
+
+kvToString :: (String, Int) -> String
+kvToString (k,v) = k ++ ": " ++ (show  v)
+
+displayCount :: [(String, Int)] -> [String]
+displayCount = map kvToString
+
+listWords :: [Item String] -> [String]
+--listWords posts = concat (fmap words (fmap itemBody posts))
+listWords posts = concat . (fmap words) . (fmap itemBody) $ posts
+
+firstWord :: [Item String] -> String
+--firstWord = head . concat . (fmap words) . listWords
+firstWord = concat . sort . concat . (fmap words) . listWords
+
+getWords :: Compiler [Item String] -> Compiler String
+getWords posts = do
+    p <- posts
+    return $ unlines . displayCount . countWords . listWords $ p
+    --return $ (unlines (nub (sort ( listWords p ))))
+    --return $ (( listWords p ) !! 1)
+    --p <- posts
+    --return head listWords p
+    -- words <- itemBody <$> posts
+    -- body  <- words --map itemBody words
+    -- return ["aaa"]
+
 
 --------------------------------------------------------------------------------
 postCtx :: Context String
-postCtx =
+postCtx = (field "reverse" $ return . reverse .itemBody ) `mappend`
     dateField "date" "%B %e, %Y" `mappend`
     defaultContext
 

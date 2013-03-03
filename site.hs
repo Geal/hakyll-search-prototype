@@ -7,6 +7,7 @@ import           Debug.Trace
 import           Hakyll.Core.Compiler
 import           Data.List
 import           qualified Data.Map as M
+import           Text.JSON
 --------------------------------------------------------------------------------
 main :: IO ()
 main = hakyll $ do
@@ -61,13 +62,18 @@ main = hakyll $ do
 
     match "templates/*" $ compile templateCompiler
 
-    create ["words.txt", "blah.txt"] $ do
+    create ["search.json"] $ do
         route idRoute
         compile $ do
             --let myCtx = field "words" $ \_ -> wordList
-            let myCtx = field "words" $ \_ -> (getWords (loadAll ("posts/*" .&&. hasVersion "raw")))
+            let myCtx = field "words" $ \_ -> (getWords routeToString (loadAll ("posts/*" .&&. hasVersion "raw")))
             makeItem "" >>= loadAndApplyTemplate "templates/words.txt" myCtx
 
+routeToString :: Compiler String
+routeToString = do 
+    identifier <- getUnderlying
+    Just s <- getRoute identifier
+    return s
 
 countWords :: [String] -> [(String, Int)]
 countWords words = map (\xs -> (head xs, length xs)) . group . sort $ words
@@ -86,10 +92,11 @@ firstWord :: [Item String] -> String
 --firstWord = head . concat . (fmap words) . listWords
 firstWord = concat . sort . concat . (fmap words) . listWords
 
-getWords :: Compiler [Item String] -> Compiler String
-getWords posts = do
+getWords :: Compiler String -> Compiler [Item String] -> Compiler String
+getWords route posts = do
     p <- posts
-    return $ unlines . displayCount . countWords . listWords $ p
+    r <- route
+    return $ encode . showJSON $ listWords $ p --r ++ (unlines . displayCount . countWords . listWords $ p)
     --return $ (unlines (nub (sort ( listWords p ))))
     --return $ (( listWords p ) !! 1)
     --p <- posts

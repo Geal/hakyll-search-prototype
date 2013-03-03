@@ -95,11 +95,19 @@ firstWord :: [Item String] -> String
 --firstWord = head . concat . (fmap words) . listWords
 firstWord = concat . sort . concat . (fmap words) . listWords
 
+-- get post title, URL and content
+extractPostData :: Item String -> (String, String)
+extractPostData post = 
+                       let url = fromJust . (runRoutes (setExtension "html")) . itemIdentifier $ post
+                           content = itemBody post
+                       in (url, content)
+
 getWords :: Compiler String -> Compiler [Item String] -> Compiler String
 getWords route posts = do
     p <- posts
     r <- route
-    return $ fromJust (runRoutes (setExtension "html") ( itemIdentifier (head p) ))
+    return $ encode . showJSON . extractPostData . head $ p
+    --return $ fromJust (runRoutes (setExtension "html") ( itemIdentifier (head p) ))
     --return $ r ++ (encode . showJSON $ listWords $ p) -- show the list of words as JSON array
     --return $ r ++ (unlines . displayCount . countWords . listWords $ p) -- show for each word the number of occurrences, and prepend the file's name
     --return $ (unlines (nub (sort ( listWords p ))))

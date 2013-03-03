@@ -95,20 +95,46 @@ firstWord :: [Item String] -> String
 --firstWord = head . concat . (fmap words) . listWords
 firstWord = concat . sort . concat . (fmap words) . listWords
 
+type PostUrl       = String
+type PostContent   = String
+type PostData      = (PostUrl, PostContent)
+type Word          = String
+type WordList      = [Word]
+type PostWords     = (PostUrl, WordList)
+type SearchData    = [(Word, [PostUrl])]
+type UrlList       = [PostUrl]
+type MapSearchData = M.Map Word UrlList
+
 -- get post title, URL and content
-extractPostData :: Item String -> (String, String)
+extractPostData :: Item String -> PostData
 extractPostData post = 
                        let url = fromJust . (runRoutes (setExtension "html")) . itemIdentifier $ post
                            content = itemBody post
                        in (url, content)
 
+addUrlToSearch :: PostUrl -> MapSearchData -> Word -> MapSearchData
+addUrlToSearch url search word = case M.lookup word search of
+                                    Just urlList -> M.insert word (url : urlList) search
+                                    Nothing -> M.insert word [url] search
 
+addPostToSearch :: SearchData -> PostWords -> SearchData
+addPostToSearch search post = M.toList (foldl (addUrlToSearch (fst post)) (M.fromList search) (snd post) )
+
+foldWordList :: SearchData -> [PostWords] -> SearchData
+foldWordList search wordlist = foldl addPostToSearch search wordlist
+
+--extracts the list of words from a post and creates a mapping word -> list of URLs
+postsToWordList :: [Item String] -> SearchData
+postsToWordList posts = let postsData = fmap extractPostData posts
+                            word = fmap (\x -> (fst x, (nub . sort . words . snd) $ x )) $ postsData
+                        in foldWordList [] word
 
 getWords :: Compiler String -> Compiler [Item String] -> Compiler String
 getWords route posts = do
     p <- posts
     r <- route
-    return $ encode . showJSON . (fmap (extractPostData )) $ p
+    return $ encode . showJSON . postsToWordList $ p
+    --return $ encode . showJSON . (fmap (extractPostData )) $ p
     --return $ fromJust (runRoutes (setExtension "html") ( itemIdentifier (head p) ))
     --return $ r ++ (encode . showJSON $ listWords $ p) -- show the list of words as JSON array
     --return $ r ++ (unlines . displayCount . countWords . listWords $ p) -- show for each word the number of occurrences, and prepend the file's name

@@ -2,59 +2,22 @@
 title: S.P.Q.R.
 test: pouet
 ---
+Haskell (/ˈhæskəl/)[17] is a standardized, general-purpose purely functional programming language, with non-strict semantics and strong static typing.[18] It is named after logician Haskell Curry.[19] In Haskell, "a function is a first-class citizen" of the programming language.[20] As a functional programming language, the primary control construct is the function.
 
-Mauris in lorem nisl. Maecenas tempus facilisis ante, eget viverra nisl
-tincidunt et. Donec turpis lectus, mattis ac malesuada a, accumsan eu libero.
-Morbi condimentum, tortor et tincidunt ullamcorper, sem quam pretium nulla, id
-convallis lectus libero nec turpis. Proin dapibus nisi id est sodales nec
-ultrices tortor pellentesque. Vivamus vel nisi ac lacus sollicitudin vulputate
-ac ut ligula. Nullam feugiat risus eget eros gravida in molestie sapien euismod.
-Nunc sed hendrerit orci. Nulla mollis consequat lorem ac blandit. Ut et turpis
-mauris. Nulla est odio, posuere id ullamcorper sit amet, tincidunt vel justo.
-Curabitur placerat tincidunt varius. Nulla vulputate, ipsum eu consectetur
-mollis, dui nibh aliquam neque, at ultricies leo ligula et arcu. Proin et mi
-eget tellus sodales lobortis. Sed tempor, urna vel pulvinar faucibus, lectus
-urna vehicula ante, at facilisis dolor odio at lorem. Morbi vehicula euismod
-urna, et imperdiet urna ornare vitae.
+# History
 
-Sed tincidunt sollicitudin ultrices. In hac habitasse platea dictumst. Morbi
-ligula lectus, egestas at ultricies nec, fringilla et tellus. Duis urna lorem,
-bibendum a ornare sed, euismod sed nunc. Aliquam tempor massa at velit fringilla
-fringilla. Praesent sit amet tempor felis. Maecenas id felis ac velit aliquam
-tempor a sit amet orci. Nunc placerat nulla pellentesque sem commodo cursus.
-Praesent quis sapien orci, quis ultricies augue. Nam vestibulum sem non augue
-semper tincidunt pellentesque ipsum volutpat. Duis congue, nunc a aliquam
-luctus, quam ante convallis nisi, ac pellentesque lacus orci vel turpis. Cum
-sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus
-mus. Suspendisse hendrerit nisl eu felis sagittis faucibus. Nunc eu congue
-lorem. Quisque non nibh nisi, et ultrices massa. Sed vitae erat vitae nulla
-pellentesque fermentum.
+Following the release of Miranda by Research Software Ltd, in 1985, interest in lazy functional languages grew: by 1987, more than a dozen non-strict, purely functional programming languages existed. Of these, Miranda was the most widely used, but was not in the public domain. At the conference on Functional Programming Languages and Computer Architecture (FPCA '87) in Portland, Oregon, a meeting was held during which participants formed a strong consensus that a committee should be formed to define an open standard for such languages. The committee's purpose was to consolidate the existing functional languages into a common one that would serve as a basis for future research in functional-language design.[21]
+Haskell 1.0 to 1.4
 
-Ut diam nunc, consectetur ut ultrices eu, iaculis sed felis. Sed lacinia, odio
-et accumsan luctus, arcu ipsum accumsan erat, sit amet malesuada libero lacus et
-velit. Donec accumsan tristique tristique. Proin a metus magna, vitae mattis
-nisl. Integer a libero ipsum. Mauris faucibus eleifend metus id sodales. Morbi
-ornare, nibh nec facilisis imperdiet, turpis sem commodo lorem, id commodo
-mauris metus vitae justo. Etiam at pellentesque tortor. Proin mollis accumsan
-ligula, nec tempus augue auctor quis. Nulla lacinia, mi quis lobortis auctor,
-nisi diam posuere dui, pulvinar feugiat dui libero eget quam. Fusce eu risus
-nunc, a consectetur orci. Class aptent taciti sociosqu ad litora torquent per
-conubia nostra, per inceptos himenaeos. Maecenas venenatis aliquet orci, a
-ultricies sem facilisis eu. Donec dolor purus, porta condimentum convallis nec,
-dignissim nec libero.
+The first version of Haskell ("Haskell 1.0") was defined in 1990.[19] The committee's efforts resulted in a series of language definitions (1.0, 1.1, 1.2, 1.3, 1.4).
+Haskell 98
 
-Etiam rutrum ultricies dui, et interdum metus elementum et. Nulla sapien nunc,
-interdum tristique porttitor in, laoreet vitae mi. Ut vehicula auctor mauris sit
-amet bibendum. Phasellus adipiscing mattis libero, eget adipiscing erat
-dignissim at. Vivamus convallis malesuada metus nec cursus. Ut cursus, lorem
-eleifend sollicitudin condimentum, felis tortor sodales augue, ac tempus lacus
-ipsum vitae quam. Vestibulum vitae lacus non tortor vehicula iaculis faucibus
-quis massa.
+In late 1997, the series culminated in Haskell 98, intended to specify a stable, minimal, portable version of the language and an accompanying standard library for teaching, and as a base for future extensions. The committee expressly welcomed the creation of extensions and variants of Haskell 98 via adding and incorporating experimental features.[21]
 
-Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus
-mus. Duis malesuada neque nec ante porttitor accumsan. Suspendisse potenti.
-Aliquam in lacus magna, imperdiet laoreet lectus. Praesent id diam nec ante
-commodo rhoncus nec vel augue. Pellentesque tortor massa, dignissim ut sagittis
-sed, hendrerit vitae nunc. Nam gravida, urna vitae hendrerit rutrum, felis augue
-vulputate tortor, ut varius velit libero nec lectus. In adipiscing massa in est
-scelerisque ullamcorper. Vivamus in nisi metus.
+In February 1999, the Haskell 98 language standard was originally published as "The Haskell 98 Report".[21] In January 2003, a revised version was published as "Haskell 98 Language and Libraries: The Revised Report".[18] The language continues to evolve rapidly, with the Glasgow Haskell Compiler (GHC) implementation representing the current de facto standard.[22]
+Haskell Prime
+
+In early 2006, the process of defining a successor to the Haskell 98 standard, informally named Haskell Prime, was begun.[23] This is an ongoing incremental process to revise the language definition, producing a new revision once per year. The first revision, named Haskell 2010, was announced in November 2009[1] and published in July 2010.
+Haskell 2010
+
+Haskell 2010 adds the Foreign Function Interface (FFI) to Haskell, allowing for bindings to other programming languages, fixes some syntax issues (changes in the formal grammar) and bans so-called "n-plus-k-patterns", that is, definitions of the form fact (n+1) = (n+1) * fact n are no longer allowed. It introduces the Language-Pragma-Syntax-Extension which allows for designating a Haskell source as Haskell 2010 or requiring certain Extensions to the Haskell Language. The names of the extensions introduced in Haskell 2010 are DoAndIfThenElse, HierarchicalModules, EmptyDataDeclarations, FixityResolution, ForeignFunctionInterface, LineCommentSyntax, PatternGuards, RelaxedDependencyAnalysis, LanguagePragma, NoNPlusKPatterns.[1]

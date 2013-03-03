@@ -8,6 +8,7 @@ import           Hakyll.Core.Compiler
 import           Data.List
 import           qualified Data.Map as M
 import           Text.JSON
+import           Data.Maybe
 --------------------------------------------------------------------------------
 main :: IO ()
 main = hakyll $ do
@@ -29,6 +30,7 @@ main = hakyll $ do
         route $ setExtension "html"
         compile $ pandocCompiler
             >>= loadAndApplyTemplate "templates/post.html"    postCtx
+            >>= saveSnapshot "content"
             >>= loadAndApplyTemplate "templates/default.html" postCtx
             >>= relativizeUrls
 
@@ -66,7 +68,8 @@ main = hakyll $ do
         route idRoute
         compile $ do
             --let myCtx = field "words" $ \_ -> wordList
-            let myCtx = field "words" $ \_ -> (getWords routeToString (loadAll ("posts/*" .&&. hasVersion "raw")))
+            let myCtx = field "words" $ \_ -> (getWords routeToString (loadAllSnapshots ("posts/*" .&&. hasNoVersion) "content"))
+            --let myCtx = field "words" $ \_ -> (getWords routeToString (loadAll ("posts/*" .&&. hasVersion "raw")))
             makeItem "" >>= loadAndApplyTemplate "templates/words.txt" myCtx
 
 routeToString :: Compiler String
@@ -96,7 +99,9 @@ getWords :: Compiler String -> Compiler [Item String] -> Compiler String
 getWords route posts = do
     p <- posts
     r <- route
-    return $ encode . showJSON $ listWords $ p --r ++ (unlines . displayCount . countWords . listWords $ p)
+    return $ fromJust (runRoutes (setExtension "html") ( itemIdentifier (head p) ))
+    --return $ r ++ (encode . showJSON $ listWords $ p) -- show the list of words as JSON array
+    --return $ r ++ (unlines . displayCount . countWords . listWords $ p) -- show for each word the number of occurrences, and prepend the file's name
     --return $ (unlines (nub (sort ( listWords p ))))
     --return $ (( listWords p ) !! 1)
     --p <- posts

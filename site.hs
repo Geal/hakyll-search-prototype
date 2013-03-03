@@ -29,8 +29,8 @@ main = hakyll $ do
     match "posts/*" $ do
         route $ setExtension "html"
         compile $ pandocCompiler
-            >>= loadAndApplyTemplate "templates/post.html"    postCtx
             >>= saveSnapshot "content"
+            >>= loadAndApplyTemplate "templates/post.html"    postCtx
             >>= loadAndApplyTemplate "templates/default.html" postCtx
             >>= relativizeUrls
 
@@ -102,11 +102,13 @@ extractPostData post =
                            content = itemBody post
                        in (url, content)
 
+
+
 getWords :: Compiler String -> Compiler [Item String] -> Compiler String
 getWords route posts = do
     p <- posts
     r <- route
-    return $ encode . showJSON . extractPostData . head $ p
+    return $ encode . showJSON . (fmap (extractPostData )) $ p
     --return $ fromJust (runRoutes (setExtension "html") ( itemIdentifier (head p) ))
     --return $ r ++ (encode . showJSON $ listWords $ p) -- show the list of words as JSON array
     --return $ r ++ (unlines . displayCount . countWords . listWords $ p) -- show for each word the number of occurrences, and prepend the file's name

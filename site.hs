@@ -86,7 +86,7 @@ firstWord :: [Item String] -> String
 --firstWord = head . concat . (fmap words) . listWords
 firstWord = concat . sort . concat . (fmap words) . listWords
 
-type PostUrl       = String
+type PostUrl       = Int
 type PostContent   = String
 type PostData      = (PostUrl, PostContent)
 type Word          = String
@@ -97,9 +97,9 @@ type UrlList       = [PostUrl]
 type MapSearchData = M.Map Word UrlList
 
 -- get post title, URL and content
-extractPostData :: Item String -> PostData
-extractPostData post = 
-                       let url = fromJust . (runRoutes (setExtension "html")) . itemIdentifier $ post
+extractPostData :: [Identifier] -> Item String -> PostData
+extractPostData posts post = 
+                       let url = fromJust (elemIndex (itemIdentifier post) posts)
                            content = itemBody post
                        in (url, content)
 
@@ -116,7 +116,7 @@ foldWordList search wordlist = foldl addPostToSearch search wordlist
 
 --extracts the list of words from a post and creates a mapping word -> list of URLs
 postsToWordList :: [Item String] -> SearchData
-postsToWordList posts = let postsData = fmap extractPostData posts
+postsToWordList posts = let postsData = fmap (extractPostData (fmap itemIdentifier posts)) posts
                             word = fmap (\x -> (fst x, (nub . sort . words . snd) $ x )) $ postsData
                         in foldWordList [] word
 

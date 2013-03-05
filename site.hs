@@ -64,7 +64,7 @@ main = hakyll $ do
 
     match "templates/*" $ compile templateCompiler
 
-    create ["search.json"] $ do
+    create ["search.json", "urls.json"] $ do
         route idRoute
         compile $ do
             --let myCtx = field "words" $ \_ -> wordList
@@ -130,10 +130,14 @@ postsToWordList posts = let postsData = fmap extractPostData posts
                         in foldWordList [] word
 
 getWords :: Compiler String -> Compiler [Item String] -> Compiler String
+--getWords Compiler "urls.json" posts = do
+--    p <- posts
+--    return $ encode . showJSON $ fmap ((runRoutes (setExtension "html")) . itemIdentifier) p
 getWords route posts = do
     p <- posts
     r <- route
-    return $ encode . showJSON . postsToWordList $ p
+    return $ case r of "urls.json" -> encode . showJSON $ fmap (fromJust . (runRoutes (setExtension "html")) . itemIdentifier) p
+                       str         -> encode . showJSON . postsToWordList $ p
     --return $ encode . showJSON . (fmap (extractPostData )) $ p
     --return $ fromJust (runRoutes (setExtension "html") ( itemIdentifier (head p) ))
     --return $ r ++ (encode . showJSON $ listWords $ p) -- show the list of words as JSON array

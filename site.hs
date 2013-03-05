@@ -136,7 +136,7 @@ getWords route posts = do
     p <- posts
     r <- route
     return $ case r of "urls.json" -> encode . showJSON $ fmap (fromJust . (runRoutes (setExtension "html")) . itemIdentifier) p
-                       str         -> encode . showJSON . postsToWordList $ p
+                       str         -> encode . toJSObject . postsToWordList $ p
     --return $ encode . showJSON . (fmap (extractPostData )) $ p
     --return $ fromJust (runRoutes (setExtension "html") ( itemIdentifier (head p) ))
     --return $ r ++ (encode . showJSON $ listWords $ p) -- show the list of words as JSON array

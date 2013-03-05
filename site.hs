@@ -68,8 +68,8 @@ main = hakyll $ do
         route idRoute
         compile $ do
             --let myCtx = field "words" $ \_ -> wordList
-            let myCtx = field "words" $ \_ -> (getWords routeToString (loadAllSnapshots ("posts/*" .&&. hasNoVersion) "content"))
-            --let myCtx = field "words" $ \_ -> (getWords routeToString (loadAll ("posts/*" .&&. hasVersion "raw")))
+            --let myCtx = field "words" $ \_ -> (getWords routeToString (loadAllSnapshots ("posts/*" .&&. hasNoVersion) "content"))
+            let myCtx = field "words" $ \_ -> (getWords routeToString (loadAll ("posts/*" .&&. hasVersion "raw")))
             makeItem "" >>= loadAndApplyTemplate "templates/words.txt" myCtx
 
 routeToString :: Compiler String

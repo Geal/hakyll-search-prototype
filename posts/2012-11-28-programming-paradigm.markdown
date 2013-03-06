@@ -1,6 +1,6 @@
 ---
 test: <truc>
-title: Carpe Diem
+title: Programming Paradigm
 ---
 Programming paradigm
 From Wikipedia, the free encyclopedia

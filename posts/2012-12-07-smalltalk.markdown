@@ -1,5 +1,5 @@
 ---
-title: Tu Quoque
+title: Smalltalk
 test: "blah"
 ---
 

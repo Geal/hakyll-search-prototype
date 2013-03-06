@@ -1,5 +1,5 @@
 ---
-title: S.P.Q.R.
+title: Haskell
 test: pouet
 ---
 Haskell (/ˈhæskəl/)[17] is a standardized, general-purpose purely functional programming language, with non-strict semantics and strong static typing.[18] It is named after logician Haskell Curry.[19] In Haskell, "a function is a first-class citizen" of the programming language.[20] As a functional programming language, the primary control construct is the function.

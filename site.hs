@@ -86,13 +86,6 @@ routeToString = do
     Just s <- getRoute identifier
     return s
 
-listWords :: [Item String] -> [String]
---listWords posts = concat (fmap words (fmap itemBody posts))
-listWords posts = concat . (fmap words) . (fmap itemBody) $ posts
-
-firstWord :: [Item String] -> String
---firstWord = head . concat . (fmap words) . listWords
-firstWord = concat . sort . concat . (fmap words) . listWords
 
 type PostUrl       = Int
 type PostContent   = String
@@ -148,16 +141,6 @@ getWords route posts = do
     -- words <- itemBody <$> posts
     -- body  <- words --map itemBody words
     -- return ["aaa"]
-
-
---countWords :: [String] -> [(String, Int)]
---countWords words = map (\xs -> (head xs, length xs)) . group . sort $ words
-
---kvToString :: (String, Int) -> String
---kvToString (k,v) = k ++ ": " ++ (show  v)
-
---displayCount :: [(String, Int)] -> [String]
---displayCount = map kvToString
 
 --------------------------------------------------------------------------------
 postCtx :: Context String

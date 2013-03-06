@@ -72,7 +72,7 @@ main = hakyll $ do
         route idRoute
         compile  copyFileCompiler
 
-    createSearch $ loadAll("posts/*" .&&. hasVersion "raw")
+    createSearch (loadAll("posts/*" .&&. hasVersion "raw")) (setExtension "html")
 
 ------------------------------------------------------------------------------------------
 
@@ -110,19 +110,19 @@ postsToWordList posts = let postsData = fmap (extractPostData (fmap itemIdentifi
                             word = fmap (\x -> (fst x, (nub . sort . words . snd) $ x )) $ postsData
                         in foldWordList [] word
 
-getWords :: Compiler String -> Compiler [Item String] -> Compiler String
-getWords route posts = do
+getWords :: Compiler String -> Compiler [Item String] -> Routes -> Compiler String
+getWords route posts routes = do
     p <- posts
     r <- route
-    return $ case r of "urls.json" -> encode . showJSON $ fmap (fromJust . (runRoutes (setExtension "html")) . itemIdentifier) p
+    return $ case r of "urls.json" -> encode . showJSON $ fmap (fromJust . (runRoutes routes) . itemIdentifier) p
                        str         -> encode . toJSObject . postsToWordList $ p
 
-createSearch :: Compiler [Item String] -> Rules()
-createSearch posts =
+createSearch :: Compiler [Item String] -> Routes -> Rules()
+createSearch posts routes =
     create ["search.json", "urls.json"] $ do
         route idRoute
         compile $ do
-            let myCtx = field "words" $ \_ -> (getWords routeToString posts)
+            let myCtx = field "words" $ \_ -> (getWords routeToString posts routes)
             makeItem "" >>= loadAndApplyTemplate "templates/words.txt" myCtx
 
 routeToString :: Compiler String

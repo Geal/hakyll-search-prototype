@@ -72,18 +72,9 @@ main = hakyll $ do
         route idRoute
         compile  copyFileCompiler
 
-    create ["search.json", "urls.json"] $ do
-        route idRoute
-        compile $ do
-            let myCtx = field "words" $ \_ -> (getWords routeToString (loadAll ("posts/*" .&&. hasVersion "raw")))
-            makeItem "" >>= loadAndApplyTemplate "templates/words.txt" myCtx
+    createSearch $ loadAll("posts/*" .&&. hasVersion "raw")
 
-routeToString :: Compiler String
-routeToString = do 
-    identifier <- getUnderlying
-    Just s <- getRoute identifier
-    return s
-
+------------------------------------------------------------------------------------------
 
 type PostUrl       = Int
 type PostContent   = String
@@ -126,6 +117,19 @@ getWords route posts = do
     return $ case r of "urls.json" -> encode . showJSON $ fmap (fromJust . (runRoutes (setExtension "html")) . itemIdentifier) p
                        str         -> encode . toJSObject . postsToWordList $ p
 
+createSearch :: Compiler [Item String] -> Rules()
+createSearch posts =
+    create ["search.json", "urls.json"] $ do
+        route idRoute
+        compile $ do
+            let myCtx = field "words" $ \_ -> (getWords routeToString posts)
+            makeItem "" >>= loadAndApplyTemplate "templates/words.txt" myCtx
+
+routeToString :: Compiler String
+routeToString = do 
+    identifier <- getUnderlying
+    Just s <- getRoute identifier
+    return s
 --------------------------------------------------------------------------------
 postCtx :: Context String
 postCtx = (field "reverse" $ return . reverse .itemBody ) `mappend`

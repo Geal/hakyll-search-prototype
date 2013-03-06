@@ -124,7 +124,7 @@ getWords :: Compiler String -> Compiler [Item String] -> Routes -> Compiler Stri
 getWords route posts routes = do
     p <- posts
     r <- route
-    return $ case r of "urls.json" -> encode . showJSON $ fmap (fromJust . (runRoutes routes) . itemIdentifier) p
+    return $ case r of "urls.json" -> encode . showJSON . catMaybes $ ((runRoutes routes) . itemIdentifier) <$> p
                        str         -> encode . toJSObject . postsToWordList $ p
 
 createSearch :: Compiler [Item String] -> Routes -> Rules()

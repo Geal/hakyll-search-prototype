@@ -20,15 +20,24 @@ window.onload = function() {
   function search() {
     $('#results').text('')
     console.log(input.val())
-    var searchWord = input.val().toLowerCase()
+    var searchWords = input.val().toLowerCase().split(" ")
+    console.log(searchWords)
     $.ajax({
       type: 'GET',
       url: '/search.json',
       dataType: 'json',
       timeout: 2000,
       success: function(data){
-        console.log(data[searchWord])
-        var indexes = data[searchWord]
+        var res = $.map(searchWords, function(word, index) {
+          return data[word]
+        }).sort()
+
+        for(var i = 1; i < res.length; i++) {
+          if(res[i] === res[i-1]) {
+            res.splice(i--, 1)
+          }
+        }
+        var indexes = res
         var results = $('#results')
         $.map(indexes, function(item, index) {
           var url = urls[item]

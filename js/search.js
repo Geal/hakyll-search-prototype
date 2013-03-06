@@ -20,14 +20,15 @@ window.onload = function() {
   function search() {
     $('#results').text('')
     console.log(input.val())
+    var searchWord = input.val().toLowerCase()
     $.ajax({
       type: 'GET',
       url: '/search.json',
       dataType: 'json',
       timeout: 2000,
       success: function(data){
-        console.log(data[input.val()])
-        var indexes = data[input.val()]
+        console.log(data[searchWord])
+        var indexes = data[searchWord]
         var results = $('#results')
         $.map(indexes, function(item, index) {
           var url = urls[item]

@@ -9,6 +9,7 @@ import           Data.List
 import           qualified Data.Map as M
 import           Text.JSON
 import           Data.Maybe
+import           Data.Char
 --------------------------------------------------------------------------------
 main :: IO ()
 main = hakyll $ do
@@ -72,6 +73,7 @@ main = hakyll $ do
         route idRoute
         compile  copyFileCompiler
 
+--- Pass the posts and their route rules
     createSearch (loadAll("posts/*" .&&. hasVersion "raw")) (setExtension "html")
 
 ------------------------------------------------------------------------------------------
@@ -107,8 +109,14 @@ foldWordList search wordlist = foldl addPostToSearch search wordlist
 --extracts the list of words from a post and creates a mapping word -> list of URLs
 postsToWordList :: [Item String] -> SearchData
 postsToWordList posts = let postsData = fmap (extractPostData (fmap itemIdentifier posts)) posts
-                            word = fmap (\x -> (fst x, (nub . sort . words . snd) $ x )) $ postsData
+                            word = fmap (\x -> (fst x, extractWordsFromText $ snd x )) $ postsData
                         in foldWordList [] word
+
+extractWordsFromText :: String -> WordList
+extractWordsFromText = nub . sort . (map lowercase) . words
+
+lowercase :: String -> String
+lowercase = map toLower
 
 getWords :: Compiler String -> Compiler [Item String] -> Routes -> Compiler String
 getWords route posts routes = do

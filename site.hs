@@ -78,24 +78,24 @@ main = hakyll $ do
 
 ------------------------------------------------------------------------------------------
 
-type PostUrl       = Int
+type PostUrlIndex  = Int
 type PostContent   = String
-type PostData      = (Maybe PostUrl, PostContent)
+type PostData      = (Maybe PostUrlIndex, PostContent)
 type Word          = String
 type WordList      = [Word]
-type PostWords     = (Maybe PostUrl, WordList)
-type SearchData    = [(Word, [PostUrl])]
-type UrlList       = [PostUrl]
+type PostWords     = (Maybe PostUrlIndex, WordList)
+type SearchData    = [(Word, [PostUrlIndex])]
+type UrlList       = [PostUrlIndex]
 type MapSearchData = M.Map Word UrlList
 
 -- get post title, URL and content
 extractPostData :: [Identifier] -> Item String -> PostData
 extractPostData posts post = 
-                       let url = elemIndex (itemIdentifier post) posts
+                       let urlIndex = elemIndex (itemIdentifier post) posts
                            content = itemBody post
-                       in (url, content)
+                       in (urlIndex, content)
 
-addUrlToSearch :: Maybe PostUrl -> MapSearchData -> Word -> MapSearchData
+addUrlToSearch :: Maybe PostUrlIndex -> MapSearchData -> Word -> MapSearchData
 addUrlToSearch (Just url) search word = case M.lookup word search of
                                     Just urlList -> M.insert word (url : urlList) search
                                     Nothing -> M.insert word [url] search

@@ -60,7 +60,7 @@ main = hakyll $ do
     match "index.html" $ do
         route idRoute
         compile $ do
-            let indexCtx = field "posts" $ \_ -> postList (take 3 . recentFirst)
+            let indexCtx = field "posts" $ \_ -> postList $ fmap (take 3) . recentFirst
 
             getResourceBody
                 >>= applyAsTemplate indexCtx
@@ -148,9 +148,9 @@ postCtx = (field "reverse" $ return . reverse .itemBody ) `mappend`
 
 
 --------------------------------------------------------------------------------
-postList :: ([Item String] -> [Item String]) -> Compiler String
+postList :: ([Item String] -> Compiler [Item String]) -> Compiler String
 postList sortFilter = do
-    posts   <- sortFilter <$> loadAll "posts/*"
+    posts   <- sortFilter =<< loadAll "posts/*"
     itemTpl <- loadBody "templates/post-item.html"
     list    <- applyTemplateList itemTpl postCtx posts
     return list

@@ -10,6 +10,7 @@ import           qualified Data.Map as M
 import           Text.JSON
 import           Data.Maybe
 import           Data.Char
+import           System.FilePath     (replaceExtension)
 --------------------------------------------------------------------------------
 main :: IO ()
 main = hakyll $ do
@@ -120,11 +121,23 @@ extractWordsFromText = nub . sort . (map lowercase) . words
 lowercase :: String -> String
 lowercase = map toLower
 
+getCompilerRoute :: Item String -> Compiler (Maybe FilePath)
+getCompilerRoute  = getRoute . itemIdentifier
+
+getAllRoutes :: Compiler [Item String] -> Compiler [Maybe FilePath]
+getAllRoutes posts = do
+    p      <- posts
+    mapM getCompilerRoute p
+
+generateUrls :: [Maybe FilePath] -> String
+generateUrls = encode . showJSON . (map (`replaceExtension` "html")). catMaybes
+
 getWords :: Compiler String -> Compiler [Item String] -> Routes -> Compiler String
 getWords route posts routes = do
-    p <- posts
-    r <- route
-    return $ case r of "urls.json" -> encode . showJSON . catMaybes $ ((runRoutes routes) . itemIdentifier) <$> p
+    p         <- posts
+    r         <- route
+    maybeUrls <- getAllRoutes posts
+    return $ case r of "urls.json" -> generateUrls maybeUrls
                        str         -> encode . toJSObject . postsToWordList $ p
 
 createSearch :: Compiler [Item String] -> Routes -> Rules()

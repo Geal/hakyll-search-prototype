@@ -115,8 +115,10 @@ postsToWordList posts = let postsData = fmap (extractPostData (fmap itemIdentifi
                             word = fmap (\x -> (fst x, extractWordsFromText $ snd x )) $ postsData
                         in foldWordList [] word
 
+removePunctuation = filter (`notElem` ".,?!-;\'\"(){}[]*/")
+
 extractWordsFromText :: String -> WordList
-extractWordsFromText = nub . sort . (map lowercase) . words
+extractWordsFromText = nub . sort . (map lowercase) . words . removePunctuation
 
 lowercase :: String -> String
 lowercase = map toLower
